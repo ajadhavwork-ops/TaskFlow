@@ -1,43 +1,50 @@
 import { useState } from "react";
 
 function App() {
-  const [tasks , setTasks] = useState([
-
-    "learn React",
-    "Build TaskFlow ",
-    "practice Js"
-
+  const [tasks, setTasks] = useState([
+    "Learn React",
+    "Build TaskFlow",
+    "Practice JavaScript",
   ]);
 
-  const [newTask, setNewTask ] = useState("");
+  const [newTask, setNewTask] = useState("");
 
-  function addTask(){
+  function addTask() {
     if (newTask.trim() === "") return;
 
-    setTasks([...tasks , newTask]);
-
+    setTasks([...tasks, newTask]);
     setNewTask("");
   }
 
+  function deleteTask(indexToDelete) {
+    setTasks(tasks.filter((task, index) => index !== indexToDelete));
+  }
+
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h1>TaskFlow</h1>
-      
-      <input 
-      type="text"
-      placeholder="enter the task..."
-      value = {newTask}
-      onChange={(event) => setNewTask(event.target.value)}
+
+      <input
+        type="text"
+        placeholder="Enter a task..."
+        value={newTask}
+        onChange={(event) => setNewTask(event.target.value)}
       />
 
-      <button onClick={addTask}> Add </button>
+      <button onClick={addTask}>Add</button>
+
       <ul>
-        {tasks.map((task,index) => (
-          <li key={index} > {task} </li>
+        {tasks.map((task, index) => (
+          <li key={index}>
+            {task}{" "}
+            <button onClick={() => deleteTask(index)}>
+              Delete
+            </button>
+          </li>
         ))}
-        </ul>
-      </div>
+      </ul>
+    </div>
   );
 }
 
-  export default App;
+export default App;
