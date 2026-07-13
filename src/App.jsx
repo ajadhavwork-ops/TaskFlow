@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -53,59 +55,26 @@ function App() {
 
   return (
     <div className="container">
-      <h1>🚀 TaskFlow</h1>
+  <h1>TaskFlow</h1>
 
-      <p className="stats">
-        Total: <strong>{tasks.length}</strong> | Completed:{" "}
-        <strong>{completedTasks}</strong> | Remaining:{" "}
-        <strong>{remainingTasks}</strong>
-      </p>
+  <p className="stats">
+    Total: <strong>{tasks.length}</strong> |
+    Completed: <strong>{completedTasks}</strong> |
+    Remaining: <strong>{remainingTasks}</strong>
+  </p>
 
-      <div className="input-group">
-        <input
-          type="text"
-          placeholder="Enter a new task..."
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-        />
+  <TaskForm
+    newTask={newTask}
+    setNewTask={setNewTask}
+    addTask={addTask}
+  />
 
-        <button className="add-btn" onClick={addTask}>
-          Add
-        </button>
-      </div>
-
-      <ul>
-        {tasks.map((task, index) => (
-          <li className="task-item" key={index}>
-            <div className="task-left">
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={() => toggleTask(index)}
-              />
-
-              <span
-                style={{
-                  textDecoration: task.completed
-                    ? "line-through"
-                    : "none",
-                  color: task.completed ? "#888" : "#000",
-                }}
-              >
-                {task.text}
-              </span>
-            </div>
-
-            <button
-              className="delete-btn"
-              onClick={() => deleteTask(index)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+  <TaskList
+    tasks={tasks}
+    toggleTask={toggleTask}
+    deleteTask={deleteTask}
+  />
+</div>
   );
 }
 
