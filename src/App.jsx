@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
- const [tasks, setTasks] = useState(() => {
-  const savedTasks = localStorage.getItem("tasks");
-  return savedTasks
-    ? JSON.parse(savedTasks)
-    : [
-        { text: "Learn React", completed: false },
-        { text: "Build TaskFlow", completed: false },
-        { text: "Practice JavaScript", completed: true },
-      ];
-});
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+
+    return savedTasks
+      ? JSON.parse(savedTasks)
+      : [
+          { text: "Learn React", completed: false },
+          { text: "Build TaskFlow", completed: false },
+          { text: "Practice JavaScript", completed: true },
+        ];
+  });
 
   const [newTask, setNewTask] = useState("");
 
-  const completedTasks = tasks.filter(task => task.completed).length;
-const remainingTasks = tasks.length - completedTasks;
+  const completedTasks = tasks.filter((task) => task.completed).length;
+  const remainingTasks = tasks.length - completedTasks;
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   function addTask() {
     if (newTask.trim() === "") return;
@@ -34,61 +40,64 @@ const remainingTasks = tasks.length - completedTasks;
   function deleteTask(indexToDelete) {
     setTasks(tasks.filter((task, index) => index !== indexToDelete));
   }
-function toggleTask(index) {
-  setTasks(
-    tasks.map((task, i) =>
-      i === index
-        ? { ...task, completed: !task.completed }
-        : task
-    )
-  );
-}
-  useEffect(() => {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}, [tasks]);
+
+  function toggleTask(indexToToggle) {
+    setTasks(
+      tasks.map((task, index) =>
+        index === indexToToggle
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
+  }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>TaskFlow</h1>
+    <div className="container">
+      <h1>🚀 TaskFlow</h1>
 
-      <p>
-  Total: {tasks.length} | Completed: {completedTasks} | Remaining: {remainingTasks}
-</p>
+      <p className="stats">
+        Total: <strong>{tasks.length}</strong> | Completed:{" "}
+        <strong>{completedTasks}</strong> | Remaining:{" "}
+        <strong>{remainingTasks}</strong>
+      </p>
 
-      <input
-        type="text"
-        placeholder="Enter a task..."
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-      />
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Enter a new task..."
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+        />
 
-      <button onClick={addTask}>Add</button>
+        <button className="add-btn" onClick={addTask}>
+          Add
+        </button>
+      </div>
 
       <ul>
         {tasks.map((task, index) => (
-          <li
-            key={index}
-            style={{
-              margin: "10px 0",
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleTask(index)}
-            />
+          <li className="task-item" key={index}>
+            <div className="task-left">
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => toggleTask(index)}
+              />
 
-            <span
-              style={{
-                marginLeft: "10px",
-                textDecoration: task.completed ? "line-through" : "none",
-              }}
-            >
-              {task.text}
-            </span>
+              <span
+                style={{
+                  textDecoration: task.completed
+                    ? "line-through"
+                    : "none",
+                  color: task.completed ? "#888" : "#000",
+                }}
+              >
+                {task.text}
+              </span>
+            </div>
 
             <button
-              style={{ marginLeft: "10px" }}
+              className="delete-btn"
               onClick={() => deleteTask(index)}
             >
               Delete
